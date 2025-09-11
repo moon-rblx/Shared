@@ -1,1 +1,47 @@
-local p=game:GetService('Players').LocalPlayer;if not p then return end;local h=game:GetService('HttpService');local f=request;if not f then return end;local r;local ok=pcall(function()r=f({Url='https://bloxsync.com/Services/authorize.php',Method='POST',Headers={['Content-Type']='application/json',['Accept']='application/json',['Host']='bloxsync.com'},Body=h:JSONEncode({uid=tostring(p.UserId)})})end);if(not ok)or(not r)or(not r.Success)or r.StatusCode~=200 or(not r.Body)then p:Kick('Error Code: AUTH-INIT-001')return end;local ok2,d=pcall(function()return h:JSONDecode(r.Body)end);if(not ok2)or type(d)~='table' or d.Authorized~=true or type(d.Code)~='string' or #d.Code==0 then p:Kick('Error Code: AUTH-INIT-001')return end;p:SetAttribute('Authorization',d.Code);local function g()local c=p:GetAttribute('Authorization');if type(c)~='string' or c~=d.Code then p:Kick('Error Code: AUTH-CHK-001')end end;g();p:GetAttributeChangedSignal('Authorization'):Connect(g)
+local p = game:GetService('Players').LocalPlayer
+if not p then return end
+
+local h = game:GetService('HttpService')
+
+local f = request
+if not f then return end
+
+local r
+local ok = pcall(function()
+    r = f({
+        Url = 'https://bloxsync.com/Services/authorize.php',
+        Method = 'POST',
+        Headers = {
+            ['Content-Type'] = 'application/json',
+            ['Accept'] = 'application/json',
+            ['Host'] = 'bloxsync.com',
+        },
+        Body = h:JSONEncode({ uid = tostring(p.UserId) }),
+    })
+end)
+
+if (not ok) or (not r) or (not r.Success) or r.StatusCode ~= 200 or (not r.Body) then
+    p:Kick('Error Code: AUTH-INIT-001')
+    return
+end
+
+local ok2, d = pcall(function()
+    return h:JSONDecode(r.Body)
+end)
+
+if (not ok2) or type(d) ~= 'table' or d.Authorized ~= true or type(d.Code) ~= 'string' or #d.Code == 0 then
+    p:Kick('Error Code: AUTH-INIT-001')
+    return
+end
+
+p:SetAttribute('Authorization', d.Code)
+
+local function g()
+    local c = p:GetAttribute('Authorization')
+    if type(c) ~= 'string' or c ~= d.Code then
+        p:Kick('Error Code: AUTH-CHK-001')
+    end
+end
+
+g()
+p:GetAttributeChangedSignal('Authorization'):Connect(g)
