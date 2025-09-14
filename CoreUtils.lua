@@ -207,6 +207,7 @@ function CoreUtils.TweenTo(player, destination, speed)
 
     tween:Play()
     CoreUtils.CreateAnchor(playerHRP)
+    tween.Completed:Wait()
 
     return tween
 end
@@ -253,4 +254,5 @@ end
 
 
 return CoreUtils
+
 
