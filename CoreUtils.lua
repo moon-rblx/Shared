@@ -118,27 +118,6 @@ function CoreUtils.SearchTable(tbl, query, opts)
     return out, lines
 end
 
-function CoreUtils.WatchTable(tbl, query)
-    query = query and tostring(query):lower() or nil
-    local seen = {}
-
-    return function()
-        local newItems = {}
-
-        for _, item in ipairs(tbl) do
-            if type(item) == 'table' and item.Name then
-                local name = tostring(item.Name)
-                if (not seen[name]) and (not query or name:lower():find(query, 1, true)) then
-                    seen[name] = true
-                    newItems[#newItems+1] = item
-                end
-            end
-        end
-
-        return newItems
-    end
-end
-
 -- ==== String Utilities =====
 
 -- ==== Formatting Utilities =====
@@ -254,5 +233,6 @@ end
 
 
 return CoreUtils
+
 
 
